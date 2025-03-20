@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romantic Hall of Memories</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        /* Enhanced Romantic Animations */
+        @keyframes gentleGlow {
+            0% { box-shadow: 0 0 10px rgba(255, 182, 193, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(255, 105, 180, 0.8); }
+            100% { box-shadow: 0 0 10px rgba(255, 182, 193, 0.5); }
+        }
+
+        @keyframes floatHeart {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(-5deg); }
+            75% { transform: translateY(-5px) rotate(5deg); }
+        }
+
+        @keyframes pulseHeart {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes fadeInLove {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Enhanced Mirror Effect with Romantic Glow */
+        .mirror-effect {
+            transform: rotateY(180deg);
+            animation: mirror-appear 0.5s forwards;
+            background: linear-gradient(to right, rgba(255,192,203,0.3), rgba(255,182,193,0.2));
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,192,203,0.4);
+            box-shadow: 0 0 15px rgba(255,105,180,0.6);
+        }
+
+        @keyframes mirror-appear {
+            0% { transform: rotateY(180deg) scale(0.5); opacity: 0; }
+            50% { transform: rotateY(180deg) scale(1.1); opacity: 0.8; }
+            100% { transform: rotateY(180deg) scale(1); opacity: 1; }
+        }
+
+        /* Enhanced Card Animation with Romantic Flair */
+        .memory-card {
+            perspective: 1000px;
+            transition: transform 0.5s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .memory-card:hover {
+            animation: gentleGlow 2s infinite;
+            transform: translateY(-5px);
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .memory-card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(255,192,203,0.6);
+        }
+
+        .card-front::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,192,203,0.2), rgba(255,105,180,0.3));
+            pointer-events: none;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            font-family: 'Caveat', cursive;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+
+        /* Gallery Scroll Enhanced */
+        .gallery-container {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            padding: 1.5rem 0;
+        }
+
+        .gallery-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Heart Button Animation */
+        .surprise-btn {
+            animation: pulseHeart 2s infinite;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(255,105,180,0.7);
+        }
+
+        .surprise-btn:hover {
+            animation: floatHeart 1s infinite;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255,20,147,0.8);
+        }
+
+        /* Continue Button Animation */
+        .continue-btn {
+            animation: gentleGlow 3s infinite;
+            transition: all 0.5s ease;
+        }
+
+        .continue-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255,105,180,0.9);
+        }
+
+        /* Popup Styles with Romantic Flair */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 50;
+            animation: fadeInLove 0.7s;
+            box-shadow: 0 0 30px rgba(255,105,180,0.6);
+        }
+
+        /* Enhanced Romantic Background */
+        body {
+            background: linear-gradient(135deg, #ff8eb4 0%, #b076e8 50%, #7c4dff 100%);
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Floating hearts particles */
+        .heart-particle {
+            position: absolute;
+            animation: floatHeart 15s infinite ease-in-out;
+            opacity: 0.6;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); }
+            25% { transform: translateY(-40px) translateX(20px) rotate(10deg); }
+            50% { transform: translateY(0) translateX(40px) rotate(0deg); }
+            75% { transform: translateY(40px) translateX(20px) rotate(-10deg); }
+        }
+
+        /* Page title animation */
+        .title-gradient {
+            background-size: 200% auto;
+            background-image: linear-gradient(to right, #ff69b4 0%, #da70d6 25%, #ff1493 50%, #da70d6 75%, #ff69b4 100%);
+            animation: gradientMove 3s linear infinite;
+        }
+
+        @keyframes gradientMove {
+            to { background-position: 200% center; }
+        }
+
+        /* Memory card border glow */
+        .card-glow {
+            box-shadow: 0 0 15px rgba(255,182,193,0.7);
+            transition: all 0.5s ease;
+        }
+
+        .card-glow:hover {
+            box-shadow: 0 0 25px rgba(255,105,180,0.9);
+        }
+
+        /* Image overlay effect */
+        .image-overlay {
+            transition: all 0.3s ease;
+        }
+
+        .memory-card:hover .image-overlay {
+            background: rgba(255,105,180,0.2);
+        }
+    </style>
+</head>
+<body class="text-white overflow-x-hidden">
+    <!-- Font imports for romantic styling -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Floating heart particles -->
+    <div class="absolute w-full h-full overflow-hidden pointer-events-none">
+        <div class="heart-particle" style="top: 10%; left: 5%; animation-delay: 0s;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffb6c1" style="opacity: 0.7;">
+                <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
+            </svg>
+        </div>
+        <div class="heart-particle" style="top: 20%; left: 80%; animation-delay: 2s;">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="#ff69b4" style="opacity: 0.6;">
+                <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
+            </svg>
+        </div>
+        <div class="heart-particle" style="top: 50%; left: 10%; animation-delay: 4s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff1493" style="opacity: 0.8;">
+                <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
+            </svg>
+        </div>
+        <div class="heart-particle" style="top: 70%; left: 70%; animation-delay: 6s;">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="#c71585" style="opacity: 0.5;">
+                <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
+            </svg>
+        </div>
+        <div class="heart-particle" style="top: 30%; left: 30%; animation-delay: 8s;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#db7093" style="opacity: 0.7;">
+                <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
+            </svg>
+        </div>
+        <div class="heart-particle" style="top: 80%; left: 20%; animation-delay: 10s;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="#ff69b4" style="opacity: 0.6;">
+                <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Romantic Page Header -->
+    <header class="container mx-auto px-4 py-8 text-center relative z-10">
+        <h1 class="text-4xl md:text-6xl font-bold mb-3 text-transparent bg-clip-text title-gradient font-['Caveat']">Our Romantic Memories</h1>
+        <p class="text-lg md:text-xl text-white">Journey through the special moments we've shared together ♥</p>
+        <div class="flex justify-center mt-3">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#ff69b4" class="animate-pulse">
+                <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
+            </svg>
+        </div>
+    </header>
+
+    <!-- Enhanced Memory Card Gallery -->
+    <div class="relative w-full my-8">
+        <div class="gallery-container flex overflow-x-auto py-8 px-4 space-x-8 snap-x snap-mandatory w-full" id="memoryGallery">
+            <!-- Memory Card 1 -->
+            <div class="memory-card flex-shrink-0 w-64 h-80 snap-center card-glow rounded-xl">
+                <div class="card-inner w-full h-full">
+                    <div class="card-front bg-gradient-to-br from-pink-400 to-purple-600 p-3 flex items-center justify-center">
+                        <div class="relative w-full h-full overflow-hidden rounded-lg">
+                            <img src="pic1.jpg" alt="Memory" class="w-full h-full object-cover">
+                            <div class="image-overlay absolute inset-0"></div>
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-pink-900 to-transparent p-3">
+                                <h3 class="text-xl font-semibold font-['Caveat']">Summer Sunset</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-back bg-gradient-to-br from-pink-500 to-purple-700 flex items-center justify-center text-center">
+                        <p class="text-xl">"That magical sunset when you held my hand and time stood still. The beginning of our forever."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory Card 2 -->
+            <div class="memory-card flex-shrink-0 w-64 h-80 snap-center card-glow rounded-xl">
+                <div class="card-inner w-full h-full">
+                    <div class="card-front bg-gradient-to-br from-pink-500 to-indigo-600 p-3 flex items-center justify-center">
+                        <div class="relative w-full h-full overflow-hidden rounded-lg">
+                            <img src="pic2.jpg" alt="Memory" class="w-full h-full object-cover">
+                            <div class="image-overlay absolute inset-0"></div>
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-pink-900 to-transparent p-3">
+                                <h3 class="text-xl font-semibold font-['Caveat']">First Dance</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-back bg-gradient-to-br from-pink-600 to-indigo-700 flex items-center justify-center text-center">
+                        <p class="text-xl">"Dancing in the rain with you was pure magic. Every drop of water sparkled like diamonds around us."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory Card 3 -->
+            <div class="memory-card flex-shrink-0 w-64 h-80 snap-center card-glow rounded-xl">
+                <div class="card-inner w-full h-full">
+                    <div class="card-front bg-gradient-to-br from-pink-400 to-purple-700 p-3 flex items-center justify-center">
+                        <div class="relative w-full h-full overflow-hidden rounded-lg">
+                            <img src="pic3.jpg" alt="Memory" class="w-full h-full object-cover">
+                            <div class="image-overlay absolute inset-0"></div>
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-pink-900 to-transparent p-3">
+                                <h3 class="text-xl font-semibold font-['Caveat']">Starry Night</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-back bg-gradient-to-br from-pink-500 to-purple-800 flex items-center justify-center text-center">
+                        <p class="text-xl">"Under the blanket of stars, you pointed out constellations while I was just counting the ways I fell for you."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory Card 4 -->
+            <div class="memory-card flex-shrink-0 w-64 h-80 snap-center card-glow rounded-xl">
+                <div class="card-inner w-full h-full">
+                    <div class="card-front bg-gradient-to-br from-pink-500 to-red-600 p-3 flex items-center justify-center">
+                        <div class="relative w-full h-full overflow-hidden rounded-lg">
+                            <img src="pic4.jpg" alt="Memory" class="w-full h-full object-cover">
+                            <div class="image-overlay absolute inset-0"></div>
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-pink-900 to-transparent p-3">
+                                <h3 class="text-xl font-semibold font-['Caveat']">Sweet Picnic</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-back bg-gradient-to-br from-pink-600 to-red-700 flex items-center justify-center text-center">
+                        <p class="text-xl">"Strawberries, chocolate, and your laughter. A perfect day with nothing but blue skies and sweet memories."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory Card 5 -->
+            <div class="memory-card flex-shrink-0 w-64 h-80 snap-center card-glow rounded-xl">
+                <div class="card-inner w-full h-full">
+                    <div class="card-front bg-gradient-to-br from-pink-400 to-fuchsia-600 p-3 flex items-center justify-center">
+                        <div class="relative w-full h-full overflow-hidden rounded-lg">
+                            <img src="pic5.jpg" alt="Memory" class="w-full h-full object-cover">
+                            <div class="image-overlay absolute inset-0"></div>
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-pink-900 to-transparent p-3">
+                                <h3 class="text-xl font-semibold font-['Caveat']">Moonlit Kiss</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-back bg-gradient-to-br from-pink-500 to-fuchsia-700 flex items-center justify-center text-center">
+                        <p class="text-xl">"The night you surprised me with a kiss under the full moon. My heart still skips a beat remembering it."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory Card 6 -->
+            <div class="memory-card flex-shrink-0 w-64 h-80 snap-center card-glow rounded-xl">
+                <div class="card-inner w-full h-full">
+                    <div class="card-front bg-gradient-to-br from-pink-500 to-purple-600 p-3 flex items-center justify-center">
+                        <div class="relative w-full h-full overflow-hidden rounded-lg">
+                            <img src="pic6.jpg" alt="Memory" class="w-full h-full object-cover">
+                            <div class="image-overlay absolute inset-0"></div>
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-pink-900 to-transparent p-3">
+                                <h3 class="text-xl font-semibold font-['Caveat']">Coastal Dreams</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-back bg-gradient-to-br from-pink-600 to-purple-700 flex items-center justify-center text-center">
+                        <p class="text-xl">"Walking barefoot on the shore, counting waves and making promises that would last longer than footprints in the sand."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory Card 7 -->
+            <div class="memory-card flex-shrink-0 w-64 h-80 snap-center card-glow rounded-xl">
+                <div class="card-inner w-full h-full">
+                    <div class="card-front bg-gradient-to-br from-purple-500 to-fuchsia-600 p-3 flex items-center justify-center">
+                        <div class="relative w-full h-full overflow-hidden rounded-lg">
+                            <img src="pic7.jpg" alt="Memory" class="w-full h-full object-cover">
+                            <div class="image-overlay absolute inset-0"></div>
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-pink-900 to-transparent p-3">
+                                <h3 class="text-xl font-semibold font-['Caveat']">Sweet Whispers</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-back bg-gradient-to-br from-purple-600 to-fuchsia-700 flex items-center justify-center text-center">
+                        <p class="text-xl">"The secret you whispered in my ear that made me laugh until tears came. Only you know how to make my heart so full."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory Card 8 -->
+            <div class="memory-card flex-shrink-0 w-64 h-80 snap-center card-glow rounded-xl">
+                <div class="card-inner w-full h-full">
+                    <div class="card-front bg-gradient-to-br from-pink-400 to-purple-600 p-3 flex items-center justify-center">
+                        <div class="relative w-full h-full overflow-hidden rounded-lg">
+                            <img src="pic8.jpg" alt="Memory" class="w-full h-full object-cover">
+                            <div class="image-overlay absolute inset-0"></div>
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-pink-900 to-transparent p-3">
+                                <h3 class="text-xl font-semibold font-['Caveat']">First Glance</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-back bg-gradient-to-br from-pink-500 to-purple-700 flex items-center justify-center text-center">
+                        <p class="text-xl">"The first time our eyes met. I didn't know it then, but that moment would change everything forever."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Gallery Navigation Hearts -->
+        <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-4xl text-pink-300 opacity-70 hidden md:block">❤</div>
+        <div class="absolute right-4 top-1/2 transform -translate-y-1/2 text-4xl text-pink-300 opacity-70 hidden md:block">❤</div>
+    </div>
+
+    <!-- Heart-shaped Surprise Button -->
+    <div class="fixed bottom-24 right-8 md:right-12 z-40">
+        <button class="surprise-btn bg-gradient-to-r from-pink-500 via-fuchsia-600 to-pink-500 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition">
+            <span class="flex items-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white" class="mr-2">
+                    <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
+                </svg>
+                Sweet Surprise
+            </span>
+        </button>
+    </div>
+
+    <!-- Enhanced Romantic Popups -->
+    <div id="voiceNotePopup" class="popup bg-gradient-to-br from-pink-700 via-purple-800 to-pink-700 bg-opacity-90 p-6 rounded-xl shadow-2xl max-w-md">
+        <div class="mirror-effect text-center mb-4 p-6 rounded-xl">
+            <h3 class="text-2xl font-bold text-pink-300 mb-2 font-['Caveat']">Love Note ♥</h3>
+            <p class="text-gray-200 mb-4">Listen to my heart speaking to you:</p>
+            <div class="bg-pink-900 bg-opacity-50 p-4 rounded-lg">
+                <audio controls class="w-full">
+                    <source src="#" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+        <button class="close-popup block mx-auto mt-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold py-2 px-6 rounded-full hover:shadow-lg transform transition hover:scale-105">Close with Love</button>
+    </div>
+
+    <div id="memePopup" class="popup bg-gradient-to-br from-pink-700 via-purple-800 to-pink-700 bg-opacity-90 p-6 rounded-xl shadow-2xl max-w-md">
+        <div class="mirror-effect text-center mb-4 p-6 rounded-xl">
+            <h3 class="text-2xl font-bold text-pink-300 mb-2 font-['Caveat']">Our Little Joke ♥</h3>
+            <div class="bg-pink-900 bg-opacity-50 p-3 rounded-lg">
+                <img src="/api/placeholder/400/320" alt="Sweet Memory" class="w-full rounded">
+            </div>
+            <p class="text-gray-200 mt-4">Only we understand why this makes us laugh so much! 💖</p>
+        </div>
+        <button class="close-popup block mx-auto mt-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold py-2 px-6 rounded-full hover:shadow-lg transform transition hover:scale-105">Keep Our Secret</button>
+    </div>
+
+    <div id="challengePopup" class="popup bg-gradient-to-br from-pink-700 via-purple-800 to-pink-700 bg-opacity-90 p-6 rounded-xl shadow-2xl max-w-md">
+        <div class="mirror-effect text-center mb-4 p-6 rounded-xl">
+            <h3 class="text-2xl font-bold text-pink-300 mb-2 font-['Caveat']">Love Challenge ♥</h3>
+            <div class="bg-pink-900 bg-opacity-50 p-5 rounded-lg">
+                <p class="text-xl text-white mb-4">Send this sweet message:</p>
+                <p class="text-2xl font-bold text-pink-200 font-['Caveat']">"Thinking of your smile just made my day brighter. Miss you. ❤️"</p>
+                <p class="text-gray-300 mt-4 text-sm">Let's see how quickly they respond!</p>
+            </div>
+        </div>
+        <button class="close-popup block mx-auto mt-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold py-2 px-6 rounded-full hover:shadow-lg transform transition hover:scale-105">Challenge Accepted</button>
+    </div>
+
+    <div id="poemPopup" class="popup bg-gradient-to-br from-pink-700 via-purple-800 to-pink-700 bg-opacity-90 p-6 rounded-xl shadow-2xl max-w-md">
+        <div class="mirror-effect text-center mb-4 p-6 rounded-xl">
+            <h3 class="text-2xl font-bold text-pink-300 mb-2 font-['Caveat']">A Poem For You ♥</h3>
+            <div class="bg-pink-900 bg-opacity-50 p-5 rounded-lg">
+                <p class="text-xl text-white italic font-['Caveat']">
+                    In the quiet moments when stars align,<br>
+                    I found you, and your heart touched mine.<br>
+                    Through seasons changing and time's swift flight,<br>
+                    Your love remains my guiding light.<br><br>
+                    
+                    Every smile, every touch, every gentle word,<br>
+                    Creates a symphony my soul has heard.<br>
+                    Forever with you is my deepest desire,<br>
+                    As our love burns with eternal fire.
+                </p>
+            </div>
+        </div>
+        <button class="close-popup block mx-auto mt-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold py-2 px-6 rounded-full hover:shadow-lg transform transition hover:scale-105">Keep In My Heart</button>
+    </div>
+
+    <!-- Continue Journey Button -->
+    <div class="text-center py-8 mb-16 relative z-10">
+        <button class="continue-btn bg-gradient-to-r from-pink-500 via-fuchsia-600 to-purple-600 text-white font-bold py-3 px-8 rounded-full shadow-lg" onclick="window.location.href='third.html'">
+            Continue Our Journey
+        </button>
+        <p class="text-sm text-pink-200 mt-3 font-['Caveat'] text-xl">More beautiful memories await us...</p>
+    </div>
+
+    <!-- Page Footer with Heart Animation -->
+    <footer class="container mx-auto px-4 py-6 text-center text-pink-200 mt-8">
+        <div class="mb-4">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="#ff69b4" class="inline-block animate-pulse">
+                <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
+            </svg>
+        </div>
+        <p class="font-['Caveat'] text-xl">Forever and Always</p>
+        <p class="text-xs mt-2 text-pink-300">Created with love, for you</p>
+    </footer>
+
+    <!-- JavaScript for enhanced interactions -->
+    <script>
+        // Flip memory cards when clicked
+        document.querySelectorAll('.memory-card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('flipped');
+            });
+        });
+
+        // Popup functionality
+        const popups = ['voiceNotePopup', 'memePopup', 'challengePopup', 'poemPopup'];
+        let currentPopupIndex = 0;
+
+        document.querySelector('.surprise-btn').addEventListener('click', () => {
+            // Show a random popup
+            const randomIndex = Math.floor(Math.random() * popups.length);
+            document.getElementById(popups[randomIndex]).style.display = 'block';
+        });
+
+        // Close popup buttons
+        document.querySelectorAll('.close-popup').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.target.closest('.popup').style.display = 'none';
+            });
+        });
+
+        // Continue journey button
+        document.querySelector('.continue-btn').addEventListener('click', () => {
+            // Add smooth scroll to gallery
+            document.getElementById('memoryGallery').scrollLeft += 300;
+            
+            // Add heart burst animation
+            createHeartBurst();
+        });
+
+        // Heart burst animation
+        function createHeartBurst() {
+            const container = document.querySelector('body');
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart-particle');
+                    heart.style.position = 'fixed';
+                    heart.style.left = `${Math.random() * 100}%`;
+                    heart.style.top = `${Math.random() * 100}%`;
+                    heart.style.animation = `floatHeart ${5 + Math.random() * 10}s linear`;
+                    heart.style.opacity = '0';
+                    heart.innerHTML = `<svg width="${20 + Math.random() * 20}" height="${20 + Math.random() * 20}" viewBox="0 0 24 24" fill="${getRandomPink()}" style="opacity: ${0.3 + Math.random() * 0.7};">
+                        <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
+                    </svg>`;
+                    
+                    container.appendChild(heart);
+                    
+                    // Animate in
+                    setTimeout(() => heart.style.opacity = '1', 10);
+                    
+                    // Remove after animation completes
+                    setTimeout(() => {
+                        heart.style.opacity = '0';
+                        setTimeout(() => heart.remove(), 1000);
+                    }, 4000);
+                    
+                }, i * 100);
+            }
+        }
+        
+        // Helper function to get random pink color
+        function getRandomPink() {
+            const pinks = ['#ff69b4', '#ff1493', '#db7093', '#c71585', '#ffb6c1'];
+            return pinks[Math.floor(Math.random() * pinks.length)];
+        }
+
+        // Add a few floating hearts on page load
+        window.addEventListener('load', () => {
+            setTimeout(createHeartBurst, 1000);
+            
+            // Auto scroll navigation for gallery
+            const gallery = document.getElementById('memoryGallery');
+            let scrollInterval;
+            
+            // Auto scroll on hover
+            gallery.addEventListener('mouseover', () => {
+                // Clear any existing interval
+                clearInterval(scrollInterval);
+                
+                // Determine scroll direction based on mouse position
+                gallery.addEventListener('mousemove', (e) => {
+                    const galleryRect = gallery.getBoundingClientRect();
+                    const galleryWidth = galleryRect.width;
+                    const mouseX = e.clientX - galleryRect.left;
+                    
+                    // If mouse is in the right third of the gallery, scroll right
+                    if (mouseX > galleryWidth * 0.7) {
+                        clearInterval(scrollInterval);
+                        scrollInterval = setInterval(() => {
+                            gallery.scrollLeft += 2;
+                        }, 16);
+                    } 
+                    // If mouse is in the left third of the gallery, scroll left
+                    else if (mouseX < galleryWidth * 0.3) {
+                        clearInterval(scrollInterval);
+                        scrollInterval = setInterval(() => {
+                            gallery.scrollLeft -= 2;
+                        }, 16);
+                    }
+                    // Otherwise, stop scrolling
+                    else {
+                        clearInterval(scrollInterval);
+                    }
+                });
+            });
+            
+            // Stop auto scroll when mouse leaves
+            gallery.addEventListener('mouseleave', () => {
+                clearInterval(scrollInterval);
+            });
+        });
+    </script>
+</body>
+</html>

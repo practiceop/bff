@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Ultimate Best Friend Test</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/confetti-js/0.0.18/confetti.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #FF61D2, #FE9090, #FF61D2, #FE9090);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+      margin: 0;
+      padding: 0;
+    }
+    
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .container {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+    }
+    
+    .quiz-header {
+      background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
+      background-size: 200% 200%;
+      animation: gradientBg 5s ease infinite;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    @keyframes gradientBg {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .question-container {
+      border: 2px solid transparent;
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+    
+    .question-container:hover {
+      transform: translateY(-5px);
+    }
+    
+    .q1-bg {
+      background-image: linear-gradient(white, white), 
+                        linear-gradient(to right, #FF61D2, #FE9090);
+    }
+    
+    .q2-bg {
+      background-image: linear-gradient(white, white), 
+                        linear-gradient(to right, #43CBFF, #9708CC);
+    }
+    
+    .q3-bg {
+      background-image: linear-gradient(white, white), 
+                        linear-gradient(to right, #FCB045, #FD1D1D);
+    }
+    
+    .q4-bg {
+      background-image: linear-gradient(white, white), 
+                        linear-gradient(to right, #833AB4, #FD1D1D);
+    }
+    
+    .q5-bg {
+      background-image: linear-gradient(white, white), 
+                        linear-gradient(to right, #00DBDE, #FC00FF);
+    }
+    
+    .answer-container label {
+      transition: all 0.3s ease;
+      border-left: 0px solid #6366F1;
+    }
+    
+    .answer-container label:hover {
+      border-left: 6px solid #6366F1;
+      padding-left: 16px;
+    }
+    
+    .answer-container input:checked + div {
+      font-weight: 600;
+    }
+    
+    .feedback-text {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, opacity 0.3s ease;
+      opacity: 0;
+    }
+    
+    .feedback-visible {
+      max-height: 100px;
+      opacity: 1;
+    }
+    
+    .result-container {
+      transform: scale(0);
+      background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .result-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+      transform: rotate(45deg);
+      animation: shine 3s infinite;
+    }
+    
+    @keyframes shine {
+      0% { transform: translateX(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) rotate(45deg); }
+    }
+    
+    .btn-next-container {
+      opacity: 0;
+    }
+    
+    .btn-next {
+      background: linear-gradient(45deg, #6366F1, #EC4899);
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+    
+    .btn-next:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #EC4899, #6366F1);
+      transition: left 0.3s ease;
+      z-index: -1;
+    }
+    
+    .btn-next:hover:before {
+      left: 0;
+    }
+    
+    .btn-next:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    
+    .submit-btn {
+      background: linear-gradient(45deg, #6366F1, #EC4899);
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .submit-btn:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #EC4899, #6366F1);
+      transition: left 0.3s ease;
+      z-index: -1;
+    }
+    
+    .submit-btn:hover:before {
+      left: 0;
+    }
+    
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    
+    .emoji-float {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      animation: bubble 15s linear infinite;
+    }
+    
+    @keyframes bubble {
+      0% { transform: translateY(0) scale(0); opacity: 0; }
+      50% { opacity: 0.5; }
+      100% { transform: translateY(-100vh) scale(2); opacity: 0; }
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+      40% {transform: translateY(-30px);}
+      60% {transform: translateY(-15px);}
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+  <!-- Background bubbles -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="bubble" style="width: 60px; height: 60px; left: 10%; top: 100%; animation-delay: 0s;"></div>
+    <div class="bubble" style="width: 40px; height: 40px; left: 20%; top: 100%; animation-delay: 2s;"></div>
+    <div class="bubble" style="width: 80px; height: 80px; left: 30%; top: 100%; animation-delay: 4s;"></div>
+    <div class="bubble" style="width: 50px; height: 50px; left: 40%; top: 100%; animation-delay: 6s;"></div>
+    <div class="bubble" style="width: 70px; height: 70px; left: 50%; top: 100%; animation-delay: 8s;"></div>
+    <div class="bubble" style="width: 30px; height: 30px; left: 60%; top: 100%; animation-delay: 10s;"></div>
+    <div class="bubble" style="width: 45px; height: 45px; left: 70%; top: 100%; animation-delay: 12s;"></div>
+    <div class="bubble" style="width: 65px; height: 65px; left: 80%; top: 100%; animation-delay: 14s;"></div>
+  </div>
+
+  <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-2xl p-6 md:p-8 container">
+    <h1 class="text-4xl md:text-5xl font-bold text-center mb-6 quiz-header">The Ultimate Best Friend Test</h1>
+    <p class="text-lg text-center text-gray-700 mb-8">Let's see how well you know your bestie! Answer these questions to find out if you're truly BFF material.</p>
+    
+    <div id="quiz-container">
+      <form id="quiz-form" class="space-y-6">
+        <!-- Question 1 -->
+        <div class="question-container p-6 bg-white rounded-lg shadow-lg q1-bg">
+          <h3 class="text-xl font-semibold text-purple-700 mb-4">1. What's my most-used catchphrase?</h3>
+          <div class="space-y-3">
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-pink-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q1" value="0" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">"That's what she said!"</span>
+                  <p class="feedback-text text-sm text-pink-600 mt-2 pl-3 border-l-2 border-pink-400">Really? That's SO 2010!</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-pink-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q1" value="1" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">"Anyways, moving on..."</span>
+                  <p class="feedback-text text-sm text-pink-600 mt-2 pl-3 border-l-2 border-pink-400">I do say this when I'm uncomfortable, don't I?</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-pink-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q1" value="2" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">"I'm not crying, you're crying!"</span>
+                  <p class="feedback-text text-sm text-pink-600 mt-2 pl-3 border-l-2 border-pink-400">Me watching literally any animal video...</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-pink-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q1" value="3" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">"Let's get this bread!"</span>
+                  <p class="feedback-text text-sm text-pink-600 mt-2 pl-3 border-l-2 border-pink-400">I'm not a finance bro, but nice try!</p>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Question 2 -->
+        <div class="question-container p-6 bg-white rounded-lg shadow-lg q2-bg">
+          <h3 class="text-xl font-semibold text-purple-700 mb-4">2. What's our dumbest inside joke?</h3>
+          <div class="space-y-3">
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-purple-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q2" value="0" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">"The Pickle Incident"</span>
+                  <p class="feedback-text text-sm text-purple-600 mt-2 pl-3 border-l-2 border-purple-400">We agreed never to speak of this again...</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-purple-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q2" value="1" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">Making chicken noises in public</span>
+                  <p class="feedback-text text-sm text-purple-600 mt-2 pl-3 border-l-2 border-purple-400">BAWK BAWK! You know me too well!</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-purple-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q2" value="2" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">Calling each other by our "royal titles"</span>
+                  <p class="feedback-text text-sm text-purple-600 mt-2 pl-3 border-l-2 border-purple-400">Your Royal Highness, I'm impressed!</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-purple-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q2" value="3" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">That time we both texted "jinx" at the same time</span>
+                  <p class="feedback-text text-sm text-purple-600 mt-2 pl-3 border-l-2 border-purple-400">You still owe me a soda for that one!</p>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Question 3 -->
+        <div class="question-container p-6 bg-white rounded-lg shadow-lg q3-bg">
+          <h3 class="text-xl font-semibold text-purple-700 mb-4">3. Which song reminds us of our best moments?</h3>
+          <div class="space-y-3">
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-orange-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q3" value="0" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">"Don't Stop Believin'" by Journey</span>
+                  <p class="feedback-text text-sm text-orange-600 mt-2 pl-3 border-l-2 border-orange-400">Classic, but not our anthem!</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-orange-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q3" value="1" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">"I'll Be There For You" (Friends theme)</span>
+                  <p class="feedback-text text-sm text-orange-600 mt-2 pl-3 border-l-2 border-orange-400">*aggressive clapping* Yes, this is our jam!</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-orange-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q3" value="2" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">"Dancing Queen" by ABBA</span>
+                  <p class="feedback-text text-sm text-orange-600 mt-2 pl-3 border-l-2 border-orange-400">Our karaoke go-to, but not THE song!</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-orange-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q3" value="3" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">"We Are The Champions" by Queen</span>
+                  <p class="feedback-text text-sm text-orange-600 mt-2 pl-3 border-l-2 border-orange-400">Only when we beat that escape room!</p>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Question 4 -->
+        <div class="question-container p-6 bg-white rounded-lg shadow-lg q4-bg">
+          <h3 class="text-xl font-semibold text-purple-700 mb-4">4. What's my go-to comfort food?</h3>
+          <div class="space-y-3">
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-red-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q4" value="0" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">Ice cream</span>
+                  <p class="feedback-text text-sm text-red-600 mt-2 pl-3 border-l-2 border-red-400">Basic, but not my obsession!</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-red-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q4" value="1" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">Mac and cheese</span>
+                  <p class="feedback-text text-sm text-red-600 mt-2 pl-3 border-l-2 border-red-400">You know me too well! Extra cheese please!</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-red-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q4" value="2" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">Chocolate chip cookies</span>
+                  <p class="feedback-text text-sm text-red-600 mt-2 pl-3 border-l-2 border-red-400">My weekend treat, but not THE comfort food!</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-red-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q4" value="3" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">Pizza</span>
+                  <p class="feedback-text text-sm text-red-600 mt-2 pl-3 border-l-2 border-red-400">Good guess, but not my #1!</p>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Question 5 -->
+        <div class="question-container p-6 bg-white rounded-lg shadow-lg q5-bg">
+          <h3 class="text-xl font-semibold text-purple-700 mb-4">5. What would I choose as my super power?</h3>
+          <div class="space-y-3">
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-blue-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q5" value="0" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">Mind reading</span>
+                  <p class="feedback-text text-sm text-blue-600 mt-2 pl-3 border-l-2 border-blue-400">I know what you're thinking... and it's not this!</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-blue-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q5" value="1" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">Time travel</span>
+                  <p class="feedback-text text-sm text-blue-600 mt-2 pl-3 border-l-2 border-blue-400">Too many paradoxes! Not my style.</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-blue-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q5" value="2" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">Flight</span>
+                  <p class="feedback-text text-sm text-blue-600 mt-2 pl-3 border-l-2 border-blue-400">I'd save SO much on airfare!</p>
+                </div>
+              </label>
+            </div>
+            <div class="answer-container">
+              <label class="flex items-start p-3 hover:bg-blue-50 rounded-md transition-all cursor-pointer">
+                <input type="radio" name="q5" value="3" class="mt-1 mr-3">
+                <div>
+                  <span class="text-lg">Teleportation</span>
+                  <p class="feedback-text text-sm text-blue-600 mt-2 pl-3 border-l-2 border-blue-400">Bye-bye traffic jams! This is the ONE!</p>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <button type="submit" id="submit-quiz" class="block w-full py-4 px-6 rounded-xl transition-all shadow-xl text-white font-bold text-xl submit-btn">
+          Submit Quiz
+        </button>
+      </form>
+    </div>
+    
+    <!-- Results Section -->
+    <div id="results-container" class="hidden text-center py-8">
+      <div class="result-container p-8 rounded-xl shadow-xl">
+        <h2 id="result-title" class="text-3xl font-bold text-white mb-6"></h2>
+        <p id="result-message" class="text-xl text-white mb-6"></p>
+        <div id="result-emoji" class="text-7xl mb-6 emoji-float"></div>
+        <div id="score-display" class="text-3xl font-bold text-white mb-6"></div>
+      </div>
+      
+      <div class="btn-next-container mt-8">
+        <button id="btn-next" class="btn-next text-white font-bold py-4 px-12 rounded-xl text-xl transition-all shadow-xl">
+          Next Page
+        </button>
+      </div>
+    </div>
+    
+    <canvas id="confetti-canvas" class="fixed inset-0 z-50 pointer-events-none hidden"></canvas>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Create animated background
+      for (let i = 0; i < 10; i++) {
+        createBubble();
+      }
+      
+      function createBubble() {
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        
+        const size = Math.random() * 60 + 20;
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${Math.random() * 100}%`;
+        bubble.style.top = '100%';
+        bubble.style.animationDuration = `${Math.random() * 10 + 10}s`;
+        bubble.style.animationDelay = `${Math.random() * 5}s`;
+        
+        document.querySelector('.fixed').appendChild(bubble);
+        
+        setTimeout(() => {
+          bubble.remove();
+          createBubble();
+        }, 20000);
+      }
+      
+      // Set up answer feedback
+      const radioButtons = document.querySelectorAll('input[type="radio"]');
+      radioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+          // Hide all feedback texts in this question group
+          const questionContainer = this.closest('.question-container');
+          questionContainer.querySelectorAll('.feedback-text').forEach(el => {
+            el.classList.remove('feedback-visible');
+          });
+          
+          // Show feedback for selected answer
+          const feedbackText = this.closest('.answer-container').querySelector('.feedback-text');
+          feedbackText.classList.add('feedback-visible');
+          
+          // Apply a subtle pulse animation to the question container
+          gsap.to(questionContainer, {
+            scale: 1.02,
+            duration: 0.2,
+            yoyo: true,
+            repeat: 1
+          });
+        });
+      });
+      
+      // Set up confetti
+      const confettiCanvas = document.getElementById('confetti-canvas');
+      const confettiSettings = {
+        target: 'confetti-canvas',
+        max: 200,
+        size: 2,
+        animate: true,
+        props: ['circle', 'square', 'triangle', 'line'],
+        colors: [[165, 104, 246], [230, 61, 135], [0, 199, 228], [253, 214, 126], [120, 220, 82]],
+        clock: 25,
+        rotate: true,
+        start_from_edge: true,
+        respawn: true
+      };
+      let confetti = null;
+      
+      // Answer key - correct answers
+      const correctAnswers = {
+        q1: "2", // "I'm not crying, you're crying!"
+        q2: "1", // Making chicken noises in public
+        q3: "1", // "I'll Be There For You" (Friends theme)
+        q4: "1", // Mac and cheese
+        q5: "3"  // Teleportation
+      };
+      
+      // Form submission
+      const quizForm = document.getElementById('quiz-form');
+      quizForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(quizForm);
+        let score = 0;
+        let totalQuestions = 5;
+        
+        // Calculate score
+        for (let [question, answer] of formData.entries()) {
+          if (correctAnswers[question] === answer) {
+            score++;
+          }
+        }
+        
+        // Show results
+        document.getElementById('quiz-container').classList.add('hidden');
+        document.getElementById('results-container').classList.remove('hidden');
+        
+        // Display score
+        document.getElementById('score-display').textContent = `${score}/${totalQuestions}`;
+        
+        // Set result message based on score
+        let resultTitle, resultMessage, resultEmoji;
+        
+        if (score >= 4) {
+          resultTitle = "YOU ARE THE GOAT BESTIE! 🏆";
+          resultMessage = "You know me better than I know myself! Let's be friends forever!";
+          resultEmoji = "🎉";
+          
+          // Start confetti for high score
+          confettiCanvas.classList.remove('hidden');
+          confetti = new ConfettiGenerator(confettiSettings);
+          confetti.render();
+          
+          // Stop confetti after 6 seconds
+          setTimeout(() => {
+            confetti.clear();
+            confettiCanvas.classList.add('hidden');
+          }, 6000);
+        } else if (score >= 2) {
+          resultTitle = "Not Bad, Bestie!";
+          resultMessage = "We need a bestie bootcamp, but you're on the right track!";
+          resultEmoji = "😂";
+        } else {
+          resultTitle = "Bro, Are We Even Friends?!";
+          resultMessage = "Time to step up your friendship game! Let's hang out more!";
+          resultEmoji = "🤡";
+        }
+        
+        document.getElementById('result-title').textContent = resultTitle;
+        document.getElementById('result-message').textContent = resultMessage;
+        document.getElementById('result-emoji').textContent = resultEmoji;
+        
+        // Animate result appearance
+        const resultContainer = document.querySelector('.result-container');
+        gsap.to(resultContainer, {
+          scale: 1,
+          duration: 0.8,
+          ease: "elastic.out(1, 0.5)",
+          onComplete: () => {
+            // Add a subtle pulse animation to the result container
+            gsap.to(resultContainer, {
+              scale: 1.05,
+              duration: 1,
+              repeat: -1,
+              yoyo: true,
+              ease: "power1.inOut"
+            });
+          }
+        });
+        
+        // Show next button with animation
+        const btnNextContainer = document.querySelector('.btn-next-container');
+        gsap.to(btnNextContainer, {
+          opacity: 1,
+          duration: 1,
+          delay: 1
+        });
+      });
+      
+      // Next button functionality
+      document.getElementById('btn-next').addEventListener('click', function() {
+        // Fade out page
+        gsap.to('body > *', {
+            opacity: 0,
+            duration: 1.5,
+            ease: "power2.inOut",
+            onComplete: () => {
+                window.location.href = 'final.html'; // Change to your next page URL
+            }
+        });
+    });
+      // Optional: Add intro animation
+      gsap.from('.container', {
+        y: 30,
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out"
+      });
+      
+      gsap.from('.quiz-header', {
+        y: -20,
+        opacity: 0,
+        duration: 1.2,
+        delay: 0.3,
+        ease: "back.out(1.7)"
+      });
+      
+      gsap.from('.question-container', {
+        opacity: 0,
+        y: 20,
+        duration: 0.8,
+        stagger: 0.2,
+        delay: 0.5,
+        ease: "power1.out"
+      });
+      
+      // Add spotlight effect on hover for result container
+      const resultContainer = document.querySelector('.result-container');
+      resultContainer.addEventListener('mousemove', function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        gsap.to(this, {
+          backgroundImage: `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%)`,
+          duration: 0.3
+        });
+      });
+      
+      resultContainer.addEventListener('mouseleave', function() {
+        gsap.to(this, {
+          backgroundImage: 'none',
+          duration: 0.3
+        });
+      });
+      
+      // Check if all questions are answered to enable submit button
+      const submitButton = document.getElementById('submit-quiz');
+      
+      function checkAllAnswered() {
+        const questions = ['q1', 'q2', 'q3', 'q4', 'q5'];
+        let allAnswered = true;
+        
+        questions.forEach(question => {
+          const answered = document.querySelector(`input[name="${question}"]:checked`);
+          if (!answered) {
+            allAnswered = false;
+          }
+        });
+        
+        return allAnswered;
+      }
+      
+      // Optional: Enable submit button only when all questions are answered
+      radioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+          if (checkAllAnswered()) {
+            submitButton.classList.add('pulse-animation');
+            gsap.to(submitButton, {
+              scale: 1.05,
+              duration: 0.3,
+              yoyo: true,
+              repeat: 1
+            });
+          }
+        });
+      });
+      
+      // Add social sharing functionality
+      function shareResults(platform) {
+        const score = document.getElementById('score-display').textContent;
+        const message = `I scored ${score} on the Ultimate Best Friend Test! Take the quiz and see if you know me better!`;
+        
+        let shareUrl;
+        switch(platform) {
+          case 'facebook':
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(message)}`;
+            break;
+          case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(window.location.href)}`;
+            break;
+          case 'whatsapp':
+            shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message + ' ' + window.location.href)}`;
+            break;
+        }
+        
+        window.open(shareUrl, '_blank');
+      }
+      
+      // Add functions to reset quiz and start over
+      function resetQuiz() {
+        // Reset all selections
+        radioButtons.forEach(radio => {
+          radio.checked = false;
+        });
+        
+        // Hide all feedback
+        document.querySelectorAll('.feedback-text').forEach(el => {
+          el.classList.remove('feedback-visible');
+        });
+        
+        // Show quiz, hide results
+        document.getElementById('quiz-container').classList.remove('hidden');
+        document.getElementById('results-container').classList.add('hidden');
+        
+        // Stop confetti if it's running
+        if (confetti) {
+          confetti.clear();
+          confettiCanvas.classList.add('hidden');
+        }
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  </script>
+</body>
+</html>

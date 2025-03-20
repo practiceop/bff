@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokémon Friendship Wish Machine</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.5.1/confetti.browser.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 50%, #63b3ed 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif;
+    }
+    
+    .logo-text {
+      text-shadow: 2px 2px 0 #3182ce, 4px 4px 0 #2c5282;
+      color: #fcd34d;
+      letter-spacing: 1px;
+    }
+    
+    .pokeball {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(to bottom, #e53e3e 0%, #e53e3e 45%, #000 45%, #000 55%, #fff 55%, #fff 100%);
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      transform-style: preserve-3d;
+      transition: transform 0.6s ease;
+    }
+    
+    .pokeball-button {
+      position: absolute;
+      width: 20%;
+      height: 20%;
+      background-color: #fff;
+      border: 4px solid #000;
+      border-radius: 50%;
+      top: 40%;
+      left: 40%;
+      z-index: 10;
+    }
+    
+    .pokeball-container {
+      perspective: 800px;
+      transform-style: preserve-3d;
+      animation: float 3s ease-in-out infinite;
+      transform-origin: center bottom;
+      cursor: pointer;
+    }
+    
+    .pokeball-container:nth-child(1) { animation-delay: 0s; }
+    .pokeball-container:nth-child(2) { animation-delay: 0.5s; }
+    .pokeball-container:nth-child(3) { animation-delay: 1s; }
+    .pokeball-container:nth-child(4) { animation-delay: 1.5s; }
+    .pokeball-container:nth-child(5) { animation-delay: 2s; }
+    
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-8px) rotate(2deg); }
+      50% { transform: translateY(0) rotate(0deg); }
+      75% { transform: translateY(-5px) rotate(-2deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+    
+    .pokeball-container.opened .pokeball {
+      transform: rotateY(180deg);
+    }
+    
+    .pokeball-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    
+    .pokeball-back {
+      transform: rotateY(180deg);
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+    }
+    
+    .surprise-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+    }
+    
+    .surprise-image {
+      width: 70%;
+      height: 70%;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid #3182ce;
+      margin-bottom: 8px;
+    }
+    
+    .letter-badge {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%);
+      color: #7c2d12;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 16px;
+      border: 2px solid #7c2d12;
+      box-shadow: 0 0 0 2px #fcd34d;
+      z-index: 5;
+    }
+    
+    .sparkle {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: white;
+      pointer-events: none;
+      opacity: 0;
+    }
+    
+    .floating {
+      position: absolute;
+      pointer-events: none;
+      animation: floatingAnimation 8s infinite ease-in-out;
+      z-index: 1;
+    }
+    
+    @keyframes floatingAnimation {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(15px, -20px) rotate(15deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+    
+    .typewriter {
+      overflow: hidden;
+      white-space: nowrap;
+      margin: 0 auto;
+      letter-spacing: 0.1em;
+      animation: typing 3.5s steps(40, end);
+    }
+    
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    
+    .final-card {
+      background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+      border: 8px solid #fcd34d;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .final-card::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      background: linear-gradient(135deg, rgba(252, 211, 77, 0.3) 0%, rgba(251, 191, 36, 0.1) 100%);
+      z-index: -1;
+      filter: blur(10px);
+    }
+    
+    .lightning {
+      position: absolute;
+      opacity: 0.7;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center p-6">
+  <div class="max-w-4xl w-full">
+    <header class="text-center mb-12 relative">
+      <h1 class="text-4xl md:text-5xl font-bold logo-text mb-4">Pokémon Friendship Machine</h1>
+      <p class="text-xl text-yellow-100 font-bold">Click the Pokéballs to reveal your friendship surprises!</p>
+      <p class="text-lg text-yellow-200 mt-2">Gotta catch 'em all!</p>
+    </header>
+    
+    <div id="floating-elements"></div>
+    
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-8 mb-12 justify-items-center" id="pokeball-container">
+      <!-- Pokéballs will be generated here -->
+    </div>
+    
+    <div id="final-message" class="hidden text-center p-8 final-card transform transition-all">
+      <h2 class="text-2xl md:text-3xl font-bold text-yellow-700 mb-4">Your Friendship Code: <span id="secret-word" class="text-red-600"></span></h2>
+      <div id="typewriter-message" class="text-xl md:text-2xl text-blue-800 font-bold"></div>
+    </div>
+  </div>
+  
+  <script>
+    // Collection of fun images
+    const images = [
+      "pic1.jpg",
+      "pic2.jpg",
+      "pic3.jpg",
+      "pic4.jpg",
+      "pic5.jpg"
+    ];
+    
+    // Collection of sweet messages
+    const messages = [
+      "You're the Pikachu to my Ash!",
+      "Our friendship is legendary!",
+      "Together we're unbeatable!",
+      "You make every adventure amazing!",
+      "Best friend used AWESOME! It's super effective!"
+    ];
+    
+    // Letters to form the secret word "FRIEN"
+    const letters = ["F", "R", "I", "E", "N"];
+    
+    // Track opened pokéballs
+    let openedBalls = 0;
+    const totalBalls = 5;
+    let secretWord = "";
+    
+    // Pokéball colors (for variation)
+    const pokeballTypes = [
+      {top: "#e53e3e", bottom: "#fff"}, // Regular
+      {top: "#3182ce", bottom: "#fff"}, // Great Ball
+      {top: "#dd6b20", bottom: "#fff"}, // Ultra Ball
+      {top: "#805ad5", bottom: "#fff"}, // Master Ball
+      {top: "#38a169", bottom: "#fff"}  // Safari Ball
+    ];
+    
+    // Add floating background elements
+    function addFloatingElements() {
+      const container = document.getElementById('floating-elements');
+      const elements = ['⚡', '✨', '⭐', '💫', '🔥', '🌟'];
+      
+      for (let i = 0; i < 20; i++) {
+        const element = document.createElement('div');
+        element.className = 'floating text-xl md:text-2xl';
+        element.style.left = `${Math.random() * 100}%`;
+        element.style.top = `${Math.random() * 100}%`;
+        element.style.animationDuration = `${5 + Math.random() * 10}s`;
+        element.style.animationDelay = `${Math.random() * 5}s`;
+        element.style.opacity = '0.7';
+        element.textContent = elements[Math.floor(Math.random() * elements.length)];
+        container.appendChild(element);
+      }
+    }
+    
+    // Create the Pokéballs
+    function createPokeballs() {
+      const container = document.getElementById('pokeball-container');
+      
+      // Create a shuffled array of indices for randomization
+      let indices = [0, 1, 2, 3, 4];
+      indices = indices.sort(() => Math.random() - 0.5);
+      
+      for (let i = 0; i < totalBalls; i++) {
+        const randomIndex = indices[i];
+        const pokeballType = pokeballTypes[i];
+        
+        // Container for perspective and 3D effects
+        const pokeballContainer = document.createElement('div');
+        pokeballContainer.className = `pokeball-container w-32 h-32 md:w-40 md:h-40 relative`;
+        pokeballContainer.dataset.index = randomIndex;
+        
+        // The actual pokeball with front and back faces
+        const pokeball = document.createElement('div');
+        pokeball.className = 'pokeball';
+        
+        // Front face (Pokéball design)
+        const frontFace = document.createElement('div');
+        frontFace.className = 'pokeball-face pokeball-front';
+        frontFace.style.background = `linear-gradient(to bottom, ${pokeballType.top} 0%, ${pokeballType.top} 45%, #000 45%, #000 55%, ${pokeballType.bottom} 55%, ${pokeballType.bottom} 100%)`;
+        
+        // Pokéball button
+        const button = document.createElement('div');
+        button.className = 'pokeball-button';
+        frontFace.appendChild(button);
+        
+        // Back face (Surprise content)
+        const backFace = document.createElement('div');
+        backFace.className = 'pokeball-face pokeball-back';
+        
+        // Create the surprise container
+        const surpriseContent = document.createElement('div');
+        surpriseContent.className = 'surprise-content';
+        
+        // Create the image element
+        const imageElement = document.createElement('img');
+        imageElement.src = images[randomIndex];
+        imageElement.alt = "Friendship Image";
+        imageElement.className = 'surprise-image';
+        
+        // Create the message element
+        const messageElement = document.createElement('p');
+        messageElement.textContent = messages[randomIndex];
+        messageElement.className = 'text-xs md:text-sm text-center text-blue-800 font-bold';
+        
+        // Create the letter element
+        const letterElement = document.createElement('div');
+        letterElement.textContent = letters[randomIndex];
+        letterElement.className = 'letter-badge';
+        
+        // Append elements
+        surpriseContent.appendChild(imageElement);
+        surpriseContent.appendChild(messageElement);
+        backFace.appendChild(surpriseContent);
+        backFace.appendChild(letterElement);
+        
+        pokeball.appendChild(frontFace);
+        pokeball.appendChild(backFace);
+        pokeballContainer.appendChild(pokeball);
+        
+        // Add event listener to handle click
+        pokeballContainer.addEventListener('click', handlePokeballClick);
+        
+        container.appendChild(pokeballContainer);
+        
+        // Add sparkle animation
+        addSparkleEffect(pokeballContainer);
+      }
+    }
+    
+    // Handle pokéball click event
+    function handlePokeballClick(event) {
+      const pokeballContainer = event.currentTarget;
+      
+      // Check if already opened
+      if (pokeballContainer.classList.contains('opened')) {
+        return;
+      }
+      
+      // Play Pokéball opening sound effect
+      // Note: Sound file would need to be added - removed for this example
+      
+      // Open the Pokéball
+      pokeballContainer.classList.add('opened');
+      
+      // Get the letter from this Pokéball
+      const index = pokeballContainer.dataset.index;
+      const letter = letters[index];
+      secretWord += letter;
+      
+      // Trigger confetti with Pokémon colors
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#e53e3e', '#3182ce', '#dd6b20', '#805ad5', '#38a169', '#fcd34d']
+      });
+      
+      // Increment counter
+      openedBalls++;
+      
+      // Check if all pokéballs are opened
+      if (openedBalls === totalBalls) {
+        setTimeout(showFinalMessage, 1500);
+      }
+    }
+    
+    // Add sparkle effect to pokéballs
+    function addSparkleEffect(pokeballContainer) {
+      setInterval(() => {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        
+        // Random position around the pokéball
+        const posX = Math.random() * 120 - 10;
+        const posY = Math.random() * 120 - 10;
+        
+        sparkle.style.left = `${posX}%`;
+        sparkle.style.top = `${posY}%`;
+        
+        pokeballContainer.appendChild(sparkle);
+        
+        // Animate the sparkle
+        anime({
+          targets: sparkle,
+          opacity: [0, 0.8, 0],
+          scale: [0, 1, 0],
+          translateX: Math.random() * 15 - 7,
+          translateY: Math.random() * 15 - 7,
+          duration: 1500,
+          easing: 'easeOutExpo',
+          complete: () => {
+            sparkle.remove();
+          }
+        });
+      }, 400 + Math.random() * 600);
+    }
+    
+    // Show the final message with typewriter effect
+    function showFinalMessage() {
+      const finalMessage = document.getElementById('final-message');
+      const secretWordElement = document.getElementById('secret-word');
+      const typewriterMessage = document.getElementById('typewriter-message');
+      
+      // Display the secret word
+      secretWordElement.textContent = secretWord;
+      
+      // Show the final message container with a fade-in
+      finalMessage.classList.remove('hidden');
+      anime({
+        targets: finalMessage,
+        opacity: [0, 1],
+        translateY: [30, 0],
+        scale: [0.95, 1],
+        duration: 1000,
+        easing: 'easeOutQuad'
+      });
+      
+      // Personal message to be typed out with Pokémon reference
+      const message = "You're my best friend, my awesome teammate, and my Pokémon journey companion! Thanks for always being by my side through every battle! 💫⚡";
+      
+      // Type out the message character by character
+      let charIndex = 0;
+      const typeInterval = setInterval(() => {
+        if (charIndex < message.length) {
+          typewriterMessage.textContent += message.charAt(charIndex);
+          charIndex++;
+        } else {
+          clearInterval(typeInterval);
+          
+          // Epic Pokémon-themed confetti celebration
+          confetti({
+            particleCount: 300,
+            spread: 180,
+            origin: { y: 0.5 },
+            colors: ['#e53e3e', '#3182ce', '#fcd34d', '#38a169', '#805ad5', '#dd6b20']
+          });
+        }
+      }, 50);
+    }
+    
+    // Add lightning bolt effects
+    function addLightningEffects() {
+      const lightning = [
+        '⚡', '⚡', '⚡', '⚡', '⚡'
+      ];
+      
+      lightning.forEach((bolt, index) => {
+        const boltElement = document.createElement('div');
+        boltElement.className = 'lightning text-4xl md:text-5xl';
+        boltElement.textContent = bolt;
+        boltElement.style.left = `${10 + (index * 20)}%`;
+        boltElement.style.top = `${Math.random() * 80 + 10}%`;
+        document.body.appendChild(boltElement);
+        
+        // Animate the lightning
+        anime({
+          targets: boltElement,
+          translateY: [{value: -20, duration: 1000}, {value: 0, duration: 1000}],
+          translateX: [{value: 10, duration: 800}, {value: -10, duration: 800}],
+          opacity: [{value: 0.3, duration: 400}, {value: 0.8, duration: 400}],
+          scale: [{value: 0.8, duration: 500}, {value: 1.2, duration: 500}],
+          easing: 'easeInOutSine',
+          direction: 'alternate',
+          loop: true
+        });
+      });
+    }
+    
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      addFloatingElements();
+      createPokeballs();
+      addLightningEffects();
+      
+      // Add hover effects to pokéballs
+      document.querySelectorAll('.pokeball-container').forEach(ball => {
+        ball.addEventListener('mouseenter', () => {
+          if (!ball.classList.contains('opened')) {
+            anime({
+              targets: ball,
+              scale: 1.1,
+              duration: 300,
+              easing: 'easeOutElastic(1, .6)'
+            });
+          }
+        });
+        
+        ball.addEventListener('mouseleave', () => {
+          if (!ball.classList.contains('opened')) {
+            anime({
+              targets: ball,
+              scale: 1,
+              duration: 300,
+              easing: 'easeOutElastic(1, .6)'
+            });
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
